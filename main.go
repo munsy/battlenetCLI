@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/munsy/gobattlenet/http"
+	"github.com/munsy/gobattlenet"
 )
 
 var config cmdConfig
-var client *http.Client
+var client *battlenet.Client
+var quota battlenet.Quota
+var lastEndpoint string
 
 func init() {
 	readTOML(*configFlag)
@@ -44,13 +46,6 @@ func main() {
 		wowCommand.Parse(os.Args[2:])
 	default:
 		printDefaultsAndQuit()
-	}
-
-	var err error
-	client, err = http.New(config.Settings())
-
-	if nil != err {
-		panic(err)
 	}
 
 	if configCommand.Parsed() {

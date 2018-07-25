@@ -20,6 +20,18 @@ func printResult(v interface{}) {
 	}
 }
 
+func printQuota() {
+	fmt.Printf("X-Plan-Qps-Allotted: %v\n", quota.QPSAllotted())
+	fmt.Printf("X-Plan-Qps-Current: %v\n", quota.QPSCurrent())
+	fmt.Printf("X-Plan-Quota-Allotted: %v\n", quota.QuotaAlloted())
+	fmt.Printf("X-Plan-Quota-Current: %v\n", quota.QuotaCurrent())
+	fmt.Printf("X-Plan-Quota-Reset: %v\n", quota.QuotaReset())
+}
+
+func printLastEndpoint() {
+	fmt.Printf("Endpoint: %s\n", lastEndpoint)
+}
+
 func checkTokenFlag() {
 	if *tokenFlag == "" {
 		fmt.Println("Token not set.")

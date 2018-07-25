@@ -4,10 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/munsy/gobattlenet"
 )
 
 var (
-	d3Command            = flag.NewFlagSet("d3", flag.ExitOnError)
+	d3Command      = flag.NewFlagSet("d3", flag.ExitOnError)
+	d3QuotaFlag    = d3Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	d3EndpointFlag = d3Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+
 	d3ActIndexFlag       = d3Command.Bool("actindex", false, "Get a list of all acts (no arguments).")
 	d3ActFlag            = d3Command.Int("act", 0, "Get act by ID.")
 	d3ArtisanFlag        = d3Command.String("artisan", "", "Get a single artisan by slug.")
@@ -31,8 +36,14 @@ func parseD3Command() {
 
 	checkAllGameConfigs()
 
+	client, err := battlenet.D3Client(config.Settings(), *keyFlag)
+
+	if nil != err {
+		panic(err)
+	}
+
 	if *d3ActIndexFlag {
-		response, err := client.D3(config.Key).ActIndex()
+		response, err := client.ActIndex()
 
 		if nil != err {
 			panic(err)
@@ -41,9 +52,9 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3ActFlag != 0 {
-		response, err := client.D3(config.Key).Act(*d3ActFlag)
+		response, err := client.Act(*d3ActFlag)
 
 		if nil != err {
 			panic(err)
@@ -52,10 +63,10 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3ArtisanFlag != "" {
 		if *d3RecipeFlag != "" {
-			response, err := client.D3(config.Key).Recipe(*d3ArtisanFlag, *d3RecipeFlag)
+			response, err := client.Recipe(*d3ArtisanFlag, *d3RecipeFlag)
 
 			if nil != err {
 				panic(err)
@@ -64,9 +75,9 @@ func parseD3Command() {
 				fmt.Println("Nil response received.")
 				os.Exit(1)
 			}
-			printResult(response)
+			printResult(response.Data)
 		} else {
-			response, err := client.D3(config.Key).Artisan(*d3ArtisanFlag)
+			response, err := client.Artisan(*d3ArtisanFlag)
 
 			if nil != err {
 				panic(err)
@@ -75,10 +86,10 @@ func parseD3Command() {
 				fmt.Println("Nil response received.")
 				os.Exit(1)
 			}
-			printResult(response)
+			printResult(response.Data)
 		}
 	} else if *d3FollowerFlag != "" {
-		response, err := client.D3(config.Key).Follower(*d3FollowerFlag)
+		response, err := client.Follower(*d3FollowerFlag)
 
 		if nil != err {
 			panic(err)
@@ -87,10 +98,10 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3CharacterClassFlag != "" {
 		if *d3CharacterSkillFlag != "" {
-			response, err := client.D3(config.Key).CharacterSkill(*d3CharacterClassFlag, *d3CharacterSkillFlag)
+			response, err := client.CharacterSkill(*d3CharacterClassFlag, *d3CharacterSkillFlag)
 
 			if nil != err {
 				panic(err)
@@ -99,9 +110,9 @@ func parseD3Command() {
 				fmt.Println("Nil response received.")
 				os.Exit(1)
 			}
-			printResult(response)
+			printResult(response.Data)
 		} else {
-			response, err := client.D3(config.Key).CharacterClass(*d3CharacterClassFlag)
+			response, err := client.CharacterClass(*d3CharacterClassFlag)
 
 			if nil != err {
 				panic(err)
@@ -110,10 +121,10 @@ func parseD3Command() {
 				fmt.Println("Nil response received.")
 				os.Exit(1)
 			}
-			printResult(response)
+			printResult(response.Data)
 		}
 	} else if *d3ItemTypeIndexFlag == true {
-		response, err := client.D3(config.Key).ItemTypeIndex()
+		response, err := client.ItemTypeIndex()
 
 		if nil != err {
 			panic(err)
@@ -122,9 +133,9 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3ItemTypeFlag != "" {
-		response, err := client.D3(config.Key).ItemType(*d3ItemTypeFlag)
+		response, err := client.ItemType(*d3ItemTypeFlag)
 
 		if nil != err {
 			panic(err)
@@ -133,9 +144,9 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3ItemFlag != "" {
-		response, err := client.D3(config.Key).Item(*d3ItemFlag)
+		response, err := client.Item(*d3ItemFlag)
 
 		if nil != err {
 			panic(err)
@@ -144,11 +155,11 @@ func parseD3Command() {
 			fmt.Println("Nil response received.")
 			os.Exit(1)
 		}
-		printResult(response)
+		printResult(response.Data)
 	} else if *d3AccountFlag != "" {
 		if *d3HeroFlag != -1 {
 			if *d3HeroItemsFlag == true {
-				response, err := client.D3(config.Key).HeroItems(*d3AccountFlag, *d3HeroFlag)
+				response, err := client.HeroItems(*d3AccountFlag, *d3HeroFlag)
 
 				if nil != err {
 					panic(err)
@@ -157,9 +168,9 @@ func parseD3Command() {
 					fmt.Println("Nil response received.")
 					os.Exit(1)
 				}
-				printResult(response)
+				printResult(response.Data)
 			} else if *d3FollowerItemsFlag == true {
-				response, err := client.D3(config.Key).FollowerItems(*d3AccountFlag, *d3HeroFlag)
+				response, err := client.FollowerItems(*d3AccountFlag, *d3HeroFlag)
 
 				if nil != err {
 					panic(err)
@@ -168,9 +179,9 @@ func parseD3Command() {
 					fmt.Println("Nil response received.")
 					os.Exit(1)
 				}
-				printResult(response)
+				printResult(response.Data)
 			} else {
-				response, err := client.D3(config.Key).Hero(*d3AccountFlag, *d3HeroFlag)
+				response, err := client.Hero(*d3AccountFlag, *d3HeroFlag)
 
 				if nil != err {
 					panic(err)
@@ -179,10 +190,10 @@ func parseD3Command() {
 					fmt.Println("Nil response received.")
 					os.Exit(1)
 				}
-				printResult(response)
+				printResult(response.Data)
 			}
 		} else {
-			response, err := client.D3(config.Key).Account(*d3AccountFlag)
+			response, err := client.Account(*d3AccountFlag)
 
 			if nil != err {
 				panic(err)
@@ -191,7 +202,7 @@ func parseD3Command() {
 				fmt.Println("Nil response received.")
 				os.Exit(1)
 			}
-			printResult(response)
+			printResult(response.Data)
 		}
 	} else {
 		printD3CommandsAndQuit()

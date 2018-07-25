@@ -4,10 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/munsy/gobattlenet"
 )
 
 var (
-	sc2Command = flag.NewFlagSet("sc2", flag.ExitOnError)
+	sc2Command      = flag.NewFlagSet("sc2", flag.ExitOnError)
+	sc2QuotaFlag    = sc2Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	sc2EndpointFlag = sc2Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
 
 	sc2IDFlag   = sc2Command.Int("id", 0, "ID for various commands (required)")
 	sc2NameFlag = sc2Command.String("name", "", "Name for various profile commands.")
@@ -27,58 +31,64 @@ func parseSC2Command() {
 
 	checkAllGameConfigs()
 
+	client, err := battlenet.SC2Client(config.Settings(), *keyFlag)
+
+	if nil != err {
+		panic(err)
+	}
+
 	if *sc2IDFlag != 0 {
 		if *sc2NameFlag != "" {
 			if *sc2CharacterFlag {
-				result, err := client.Sc2(config.Key).Character(*sc2NameFlag, *sc2IDFlag)
+				result, err := client.Character(*sc2NameFlag, *sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			} else if *sc2LadderSeasonsFlag {
-				result, err := client.Sc2(config.Key).LadderSeasons(*sc2NameFlag, *sc2IDFlag)
+				result, err := client.LadderSeasons(*sc2NameFlag, *sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			} else if *sc2MatchHistoryFlag {
-				result, err := client.Sc2(config.Key).MatchHistory(*sc2NameFlag, *sc2IDFlag)
+				result, err := client.MatchHistory(*sc2NameFlag, *sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			}
 		} else {
 			if *sc2LadderFlag {
-				result, err := client.Sc2(config.Key).Ladder(*sc2IDFlag)
+				result, err := client.Ladder(*sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			} else if *sc2AchievementsFlag {
-				result, err := client.Sc2(config.Key).Achievements(*sc2IDFlag)
+				result, err := client.Achievements(*sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			} else if *sc2RewardsFlag {
-				result, err := client.Sc2(config.Key).Rewards(*sc2IDFlag)
+				result, err := client.Rewards(*sc2IDFlag)
 
 				if nil != err {
 					panic(err)
 				}
 
-				printResult(result)
+				printResult(result.Data)
 			}
 		}
 	} else {

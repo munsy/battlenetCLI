@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/munsy/gobattlenet/pkg/locale"
-	"github.com/munsy/gobattlenet/pkg/regions"
-	"github.com/munsy/gobattlenet/settings"
+	"github.com/munsy/gobattlenet"
+	"github.com/munsy/gobattlenet/locale"
+	"github.com/munsy/gobattlenet/regions"
 )
 
 type cmdConfig struct {
@@ -18,8 +18,8 @@ type cmdConfig struct {
 	Locale string
 }
 
-func (c cmdConfig) Settings() *settings.BNetSettings {
-	s := &settings.BNetSettings{}
+func (c cmdConfig) Settings() *battlenet.Settings {
+	s := &battlenet.Settings{}
 
 	s.Client = &http.Client{Timeout: (10 * time.Second)}
 

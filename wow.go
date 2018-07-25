@@ -4,10 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/munsy/gobattlenet"
 )
 
 var (
-	wowCommand = flag.NewFlagSet("wow", flag.ExitOnError)
+	wowCommand      = flag.NewFlagSet("wow", flag.ExitOnError)
+	wowQuotaFlag    = wowCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	wowEndpointFlag = wowCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
 
 	wowIDFlag            = wowCommand.Int("id", 0, "ID for various commands (required)")
 	wowCharacterNameFlag = wowCommand.String("cn", "", "Character name for various commands.")
@@ -48,242 +52,248 @@ var (
 func parseWoWCommand() {
 	checkAllGameConfigs()
 
+	client, err := battlenet.WoWClient(config.Settings(), *keyFlag)
+
+	if nil != err {
+		panic(err)
+	}
+
 	if *wowIDFlag != 0 {
 		if *wowAchievementFlag == true {
-			result, err := client.WoW(config.Key).Achievement(*wowIDFlag)
+			result, err := client.Achievement(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowItemFlag == true {
-			result, err := client.WoW(config.Key).Item(*wowIDFlag)
+			result, err := client.Item(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowItemSetFlag == true {
-			result, err := client.WoW(config.Key).ItemSet(*wowIDFlag)
+			result, err := client.ItemSet(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowBossFlag == true {
-			result, err := client.WoW(config.Key).Boss(*wowIDFlag)
+			result, err := client.Boss(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowPetAbilitiesFlag == true {
-			result, err := client.WoW(config.Key).PetAbilities(*wowIDFlag)
+			result, err := client.PetAbilities(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowPetSpeciesFlag == true {
-			result, err := client.WoW(config.Key).PetSpecies(*wowIDFlag)
+			result, err := client.PetSpecies(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowPetStatsFlag == true {
-			result, err := client.WoW(config.Key).PetStats(*wowIDFlag)
+			result, err := client.PetStats(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowQuestFlag == true {
-			result, err := client.WoW(config.Key).Quest(*wowIDFlag)
+			result, err := client.Quest(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowRecipeFlag == true {
-			result, err := client.WoW(config.Key).Recipe(*wowIDFlag)
+			result, err := client.Recipe(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowSpellFlag == true {
-			result, err := client.WoW(config.Key).Spell(*wowIDFlag)
+			result, err := client.Spell(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowZoneFlag == true {
-			result, err := client.WoW(config.Key).Zone(*wowIDFlag)
+			result, err := client.Zone(*wowIDFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		}
 	} else if *wowRealmNameFlag != "" {
 		if *wowCharacterNameFlag != "" {
-			result, err := client.WoW(config.Key).CharacterProfile(*wowRealmNameFlag, *wowCharacterNameFlag)
+			result, err := client.CharacterProfile(*wowRealmNameFlag, *wowCharacterNameFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowGuildNameFlag != "" {
-			result, err := client.WoW(config.Key).GuildProfile(*wowRealmNameFlag, *wowGuildNameFlag)
+			result, err := client.GuildProfile(*wowRealmNameFlag, *wowGuildNameFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		} else if *wowAuctionFlag == true {
-			result, err := client.WoW(config.Key).AuctionDataStatus(*wowRealmNameFlag)
+			result, err := client.AuctionDataStatus(*wowRealmNameFlag)
 
 			if nil != err {
 				panic(err)
 			}
 
-			printResult(result)
+			printResult(result.Data)
 		}
 	} else if *wowBossMasterListFlag == true {
-		result, err := client.WoW(config.Key).BossMasterList()
+		result, err := client.BossMasterList()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowMountMasterListFlag == true {
-		result, err := client.WoW(config.Key).MountMasterList()
+		result, err := client.MountMasterList()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowPetMasterListFlag == true {
-		result, err := client.WoW(config.Key).PetMasterList()
+		result, err := client.PetMasterList()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowRealmStatusFlag == true {
-		result, err := client.WoW(config.Key).RealmStatus()
+		result, err := client.RealmStatus()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowZoneMasterListFlag == true {
-		result, err := client.WoW(config.Key).ZoneMasterList()
+		result, err := client.ZoneMasterList()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowBattlegroupsFlag == true {
-		result, err := client.WoW(config.Key).Battlegroups()
+		result, err := client.Battlegroups()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowCharacterRacesFlag == true {
-		result, err := client.WoW(config.Key).CharacterRaces()
+		result, err := client.CharacterRaces()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowCharacterClassesFlag == true {
-		result, err := client.WoW(config.Key).CharacterClasses()
+		result, err := client.CharacterClasses()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowCharacterAchievementsFlag == true {
-		result, err := client.WoW(config.Key).CharacterAchievements()
+		result, err := client.CharacterAchievements()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowGuildRewardsFlag == true {
-		result, err := client.WoW(config.Key).GuildRewards()
+		result, err := client.GuildRewards()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowGuildPerksFlag == true {
-		result, err := client.WoW(config.Key).GuildPerks()
+		result, err := client.GuildPerks()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowGuildAchievementsFlag == true {
-		result, err := client.WoW(config.Key).GuildAchievements()
+		result, err := client.GuildAchievements()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowItemClassesFlag == true {
-		result, err := client.WoW(config.Key).ItemClasses()
+		result, err := client.ItemClasses()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowTalentsFlag == true {
-		result, err := client.WoW(config.Key).Talents()
+		result, err := client.Talents()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else if *wowPetTypesFlag == true {
-		result, err := client.WoW(config.Key).PetTypes()
+		result, err := client.PetTypes()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(result)
+		printResult(result.Data)
 	} else {
 		printWoWCommandsAndQuit()
 	}

@@ -4,10 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/munsy/gobattlenet"
 )
 
 var (
-	accountCommand        = flag.NewFlagSet("account", flag.ExitOnError)
+	accountCommand      = flag.NewFlagSet("account", flag.ExitOnError)
+	accountQuotaFlag    = accountCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	accountEndpointFlag = accountCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+
 	accountBattleIDFlag   = accountCommand.Bool("bid", false, "Display Battle.net ID and BattleTag.")
 	accountSc2ProfileFlag = accountCommand.Bool("sc2", false, "Display details about a Starcraft II character.")
 	accountWoWProfileFlag = accountCommand.Bool("wow", false, "Display details about a World of Warcraft profile.")
@@ -16,8 +21,14 @@ var (
 func parseAccountCommand() {
 	checkAllAccountConfigs()
 
+	client, err := battlenet.AccountClient(config.Settings(), *tokenFlag)
+
+	if nil != err {
+		panic(err)
+	}
+
 	if *accountBattleIDFlag == true {
-		response, err := client.Account(config.Token).BattleID()
+		response, err := client.BattleID()
 
 		if nil != err {
 			panic(err)
@@ -27,24 +38,41 @@ func parseAccountCommand() {
 			os.Exit(1)
 		}
 
-		printResult(response)
+		quota = response.Quota
+		lastEndpoint = response.Endpoint
+
+		printResult(response.Data)
 	} else if *accountSc2ProfileFlag == true {
-		response, err := client.Account(config.Token).Sc2OauthProfile()
+		response, err := client.Sc2OauthProfile()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(response)
+		quota = response.Quota
+		lastEndpoint = response.Endpoint
+
+		printResult(response.Data)
 	} else if *accountWoWProfileFlag == true {
-		response, err := client.Account(config.Token).WoWOauthProfile()
+		response, err := client.WoWOauthProfile()
 
 		if nil != err {
 			panic(err)
 		}
 
-		printResult(response)
+		quota = response.Quota
+		lastEndpoint = response.Endpoint
+
+		printResult(response.Data)
 	} else {
 		accountCommand.PrintDefaults()
+		os.Exit(1)
+	}
+
+	if *accountQuotaFlag {
+		printQuota()
+	}
+	if *accountEndpointFlag {
+		printLastEndpoint()
 	}
 }
