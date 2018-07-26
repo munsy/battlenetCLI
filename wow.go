@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	wowCommand      = flag.NewFlagSet("wow", flag.ExitOnError)
-	wowQuotaFlag    = wowCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
-	wowEndpointFlag = wowCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	wowCommand       = flag.NewFlagSet("wow", flag.ExitOnError)
+	wowQuotaFlag     = wowCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	wowEndpointFlag  = wowCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	wowUserAgentFlag = wowCommand.Bool("useragent", false, "Display user-agent that was used to make the given request.")
+	wowLocaleFlag    = wowCommand.Bool("locale", false, "Display locale that was used to make the given request.")
 
 	wowIDFlag            = wowCommand.Int("id", 0, "ID for various commands (required)")
 	wowCharacterNameFlag = wowCommand.String("cn", "", "Character name for various commands.")

@@ -7,8 +7,6 @@ import (
 	"time"
 
 	"github.com/munsy/gobattlenet"
-	"github.com/munsy/gobattlenet/locale"
-	"github.com/munsy/gobattlenet/regions"
 )
 
 type cmdConfig struct {
@@ -25,43 +23,43 @@ func (c cmdConfig) Settings() *battlenet.Settings {
 
 	switch c.Locale {
 	case "en_US":
-		s.Locale = locale.AmericanEnglish
+		s.Locale = battlenet.Locale.AmericanEnglish
 		break
 	case "pt_BR":
-		s.Locale = locale.BrazilianPortuguese
+		s.Locale = battlenet.Locale.BrazilianPortuguese
 		break
 	case "en_GB":
-		s.Locale = locale.BritishEnglish
+		s.Locale = battlenet.Locale.BritishEnglish
 		break
 	case "es_ES":
-		s.Locale = locale.CastilianSpanish
+		s.Locale = battlenet.Locale.CastilianSpanish
 		break
 	case "pt_PT":
-		s.Locale = locale.EuropeanPortuguese
+		s.Locale = battlenet.Locale.EuropeanPortuguese
 		break
 	case "es_MX":
-		s.Locale = locale.MexicanSpanish
+		s.Locale = battlenet.Locale.MexicanSpanish
 		break
 	case "zh_CN":
-		s.Locale = locale.SimplifiedChinese
+		s.Locale = battlenet.Locale.SimplifiedChinese
 		break
 	case "fr_FR":
-		s.Locale = locale.StandardFrench
+		s.Locale = battlenet.Locale.StandardFrench
 		break
 	case "de_DE":
-		s.Locale = locale.StandardGerman
+		s.Locale = battlenet.Locale.StandardGerman
 		break
 	case "it_IT":
-		s.Locale = locale.StandardItalian
+		s.Locale = battlenet.Locale.StandardItalian
 		break
 	case "ko_KR":
-		s.Locale = locale.StandardKorean
+		s.Locale = battlenet.Locale.StandardKorean
 		break
 	case "ru_RU":
-		s.Locale = locale.StandardRussian
+		s.Locale = battlenet.Locale.StandardRussian
 		break
 	case "zh_TW":
-		s.Locale = locale.TraditionalChinese
+		s.Locale = battlenet.Locale.TraditionalChinese
 		break
 	default:
 		fmt.Println("Invalid type. Possible types are:")
@@ -83,22 +81,22 @@ func (c cmdConfig) Settings() *battlenet.Settings {
 
 	switch c.Region {
 	case "us":
-		s.Region = regions.US
+		s.Region = battlenet.Regions.US
 		break
 	case "eu":
-		s.Region = regions.EU
+		s.Region = battlenet.Regions.EU
 		break
 	case "kr":
-		s.Region = regions.KR
+		s.Region = battlenet.Regions.KR
 		break
 	case "tw":
-		s.Region = regions.TW
+		s.Region = battlenet.Regions.TW
 		break
 	case "sea":
-		s.Region = regions.SEA
+		s.Region = battlenet.Regions.SEA
 		break
 	case "cn":
-		s.Region = regions.CN
+		s.Region = battlenet.Regions.CN
 		break
 	default:
 		fmt.Println("Invalid type. Possible types are:")

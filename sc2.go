@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	sc2Command      = flag.NewFlagSet("sc2", flag.ExitOnError)
-	sc2QuotaFlag    = sc2Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
-	sc2EndpointFlag = sc2Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	sc2Command       = flag.NewFlagSet("sc2", flag.ExitOnError)
+	sc2QuotaFlag     = sc2Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	sc2EndpointFlag  = sc2Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	sc2UserAgentFlag = sc2Command.Bool("useragent", false, "Display user-agent that was used to make the given request.")
+	sc2LocaleFlag    = sc2Command.Bool("locale", false, "Display locale that was used to make the given request.")
 
 	sc2IDFlag   = sc2Command.Int("id", 0, "ID for various commands (required)")
 	sc2NameFlag = sc2Command.String("name", "", "Name for various profile commands.")

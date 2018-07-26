@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	accountCommand      = flag.NewFlagSet("account", flag.ExitOnError)
-	accountQuotaFlag    = accountCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
-	accountEndpointFlag = accountCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	accountCommand       = flag.NewFlagSet("account", flag.ExitOnError)
+	accountQuotaFlag     = accountCommand.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	accountEndpointFlag  = accountCommand.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	accountUserAgentFlag = accountCommand.Bool("useragent", false, "Display user-agent that was used to make the given request.")
+	accountLocaleFlag    = accountCommand.Bool("locale", false, "Display locale that was used to make the given request.")
 
 	accountBattleIDFlag   = accountCommand.Bool("bid", false, "Display Battle.net ID and BattleTag.")
 	accountSc2ProfileFlag = accountCommand.Bool("sc2", false, "Display details about a Starcraft II character.")
@@ -74,5 +76,11 @@ func parseAccountCommand() {
 	}
 	if *accountEndpointFlag {
 		printLastEndpoint()
+	}
+	if *accountUserAgentFlag {
+		fmt.Printf("User-Agent: %s\n", client.UserAgent())
+	}
+	if *accountLocaleFlag {
+		fmt.Printf("Locale: %s\n", client.Locale())
 	}
 }

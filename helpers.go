@@ -28,6 +28,13 @@ func printQuota() {
 	fmt.Printf("X-Plan-Quota-Reset: %v\n", quota.QuotaReset())
 }
 
+func printUserAgent() {
+	fmt.Printf("User-Agent: %s\n", client.UserAgent())
+}
+func printLocale() {
+	fmt.Printf("Locale: %s\n", client.Locale())
+}
+
 func printLastEndpoint() {
 	fmt.Printf("Endpoint: %s\n", lastEndpoint)
 }

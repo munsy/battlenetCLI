@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	d3Command      = flag.NewFlagSet("d3", flag.ExitOnError)
-	d3QuotaFlag    = d3Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
-	d3EndpointFlag = d3Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	d3Command       = flag.NewFlagSet("d3", flag.ExitOnError)
+	d3QuotaFlag     = d3Command.Bool("quota", false, "Display Battle.net API usage statistics for this period.")
+	d3EndpointFlag  = d3Command.Bool("endpoint", false, "Display endpoint that was used to access the given data.")
+	d3UserAgentFlag = d3Command.Bool("useragent", false, "Display user-agent that was used to make the given request.")
+	d3LocaleFlag    = d3Command.Bool("locale", false, "Display locale that was used to make the given request.")
 
 	d3ActIndexFlag       = d3Command.Bool("actindex", false, "Get a list of all acts (no arguments).")
 	d3ActFlag            = d3Command.Int("act", 0, "Get act by ID.")

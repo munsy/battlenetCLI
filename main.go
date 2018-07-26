@@ -8,7 +8,7 @@ import (
 )
 
 var config cmdConfig
-var client *battlenet.Client
+var client battlenet.Client
 var quota battlenet.Quota
 var lastEndpoint string
 
